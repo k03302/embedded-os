@@ -1,14 +1,14 @@
 /*
-    GNU Linker script는 프로그램의 메모리 레이아웃을 정의하는 데 사용됩니다. 
+    GNU Linker script is used for defining memory layout
 */
 
-/* 프로그램의 진입점을 정의합니다. */
+/* Define program entry */
 ENTRY(vector_start)
 
-/* 메모리 섹션을 정의합니다. */
+/* Define memory sections */
 SECTIONS
 {
-    . = 0x0; /* 프로그램 시작 주소 설정 */
+    . = 0x0; /* Program starting address */
 
     .text :
     {
