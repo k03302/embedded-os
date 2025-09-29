@@ -7,9 +7,14 @@ LD = arm-none-eabi-ld
 OC = arm-none-eabi-objcopy
 
 LINKER_SCRIPT = ./navilos.ld
+MAP_FILE = build/navilos.map
 
-ARM_SRCS = $(wildcard boot/*.S)
-ASM_OBJS = $(patsubst boot/%.S, build/%.o, $(ARM_SRCS))
+ASM_SRCS = $(wildcard boot/*.S)
+ASM_OBJS = $(patsubst boot/%.S, build/%.os, $(ASM_SRCS))
+C_SRCS = $(wildcard boot/*.c)
+C_OBJS = $(patsubst boot/%.c, build/%.o, $(C_SRCS))
+
+INC_DIRS = include
 
 navilos = build/navilos.axf
 navilos_bin = build/navilos.bin
@@ -30,10 +35,14 @@ debug: $(navilos)
 gdb: $(navilos)
 	gdb-multiarch $(navilos)
 
-$(navilos): $(ASM_OBJS) $(LINKER_SCRIPT)
-	$(LD) -n -T $(LINKER_SCRIPT) -o $(navilos) $(ASM_OBJS)
+$(navilos): $(ASM_OBJS) $(C_OBJS) $(LINKER_SCRIPT)
+	$(LD) -n -T $(LINKER_SCRIPT) -o $(navilos) $(ASM_OBJS) $(C_OBJS) -Map=${MAP_FILE}
 	$(OC) -O binary $(navilos) $(navilos_bin)
 
-build/%.o: boot/%.S
+build/%.os: $(ASM_SRCS)
 	mkdir -p $(shell dirname $@)
-	$(AS) -march=$(ARCH) -mcpu=$(MCPU) -g -o $@ $<
+	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -g -c -o $@ $<
+
+build/%.o: $(C_SRCS)
+	mkdir -p $(shell dirname $@)
+	$(CC) -march=$(ARCH) -mcpu=$(MCPU) -I $(INC_DIRS) -g -c -o $@ $<
