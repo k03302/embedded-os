@@ -5,3 +5,4 @@
 *.axf
 *.txt
 objdump
+.vscode
