@@ -28,3 +28,21 @@ void Hal_uart_put_char(uint8_t ch)
     // send data
     Uart->uartdr.all = (ch & 0xFF);
 }
+
+uint8_t Hal_uart_get_char(void)
+{
+    // wait until FIFO is empty
+    while (Uart->uartfr.bits.RXFE)
+        ;
+
+    // check error flag
+    if (Uart->uartdr.all & 0xFFFFFF00)
+    {
+        Uart->uartrsr.all = 0xFF;
+        return 0;
+    }
+
+    // set output char
+    uint8_t data = Uart->uartdr.bits.DATA;
+    return data;
+}
