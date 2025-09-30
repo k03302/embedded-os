@@ -7,6 +7,7 @@ CC = arm-none-eabi-gcc
 AS = arm-none-eabi-as
 LD = arm-none-eabi-ld
 OC = arm-none-eabi-objcopy
+OD = arm-none-eabi-objdump
 
 LINKER_SCRIPT = ./navilos.ld
 MAP_FILE = build/navilos.map
@@ -64,3 +65,6 @@ build/%.o: %.c
 
 print-%:
 	@echo $* = $($*)
+
+dump-%:
+	$(OD) -d $(navilos) --disassemble=$*
