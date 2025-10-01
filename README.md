@@ -12,8 +12,8 @@ A simple RTOS built from scratch by following the book "Embedded OS Development 
 | 3 | Tutorial | ✅ Complete | [ch3](https://github.com/k03302/embedded-os/tree/ch3) | Basic ARM assembly, linker script setup |
 | 4 | Booting | ✅ Complete | [ch4](https://github.com/k03302/embedded-os/tree/ch4) | Boot sequence, vector table, entry point |
 | 5 | UART | 🚧 In Progress | - | Serial communication, console output |
-| 6 | Interrupt | 📋 Planned | - | Exception vectors, interrupt handlers |
-| 7 | Timer | 📋 Planned | - | System timer, time management |
+| 6 | Interrupt | ✅ Complete | [ch6](https://github.com/k03302/embedded-os/tree/ch6) | Exception vectors, interrupt handlers |
+| 7 | Timer | 🚧 In Progress | - | System timer, time management |
 | 8 | Task | 📋 Planned | - | Task control blocks, task creation |
 | 9 | Scheduler | 📋 Planned | - | Round-robin, priority scheduling |
 | 10 | Context switching | 📋 Planned | - | Register saving, task switching |
