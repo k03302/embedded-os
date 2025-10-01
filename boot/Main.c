@@ -1,5 +1,6 @@
 #include "stdint.h"
 #include "HalUart.h"
+#include "HalInterrupt.h"
 #include "stdio.h"
 
 static void Hw_init(void);
@@ -8,20 +9,8 @@ int main()
 {
     Hw_init();
     uint32_t i = 100;
-    while (i--)
-    {
-        Hal_uart_put_char('N');
-    }
-    Hal_uart_put_char('\n');
 
-    putstr("Hello World!");
-
-    i = 100;
-    while (i--)
-    {
-        uint8_t ch = Hal_uart_get_char();
-        Hal_uart_put_char(ch);
-    }
+    putstr("Hello World!\n");
 
     while (1)
         ;
@@ -29,5 +18,6 @@ int main()
 
 void Hw_init(void)
 {
+    Hal_interrupt_init();
     Hal_uart_init();
 }
