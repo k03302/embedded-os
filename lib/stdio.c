@@ -49,7 +49,7 @@ uint32_t utoa(char *buf, uint32_t val, utoa_t base)
 
 uint32_t vsprintf(char *buf, const char *format, va_list arg)
 {
-    char *format_ptr = format;
+    const char *format_ptr = format;
     char *buf_ptr = buf;
     char *str = NULL;
     uint32_t uint;

@@ -13,7 +13,11 @@ int main()
     putstr("Hello World!\n");
 
     while (1)
-        ;
+    {
+        __asm__ volatile("WFI"); // Wait for interrupt
+    }
+
+    return 0;
 }
 
 void Hw_init(void)
