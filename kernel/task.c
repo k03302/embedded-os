@@ -3,6 +3,10 @@
 
 static KernelTcb_t sTask_list[MAX_TASK_NUM];
 static uint32_t sAllocated_tcb_index;
+static KernelTcb_t *sCurrent_tcb;
+static uint32_t sCurrent_tcb_index;
+static KernelTcb_t *Scheduler_round_robin_algorithm(void);
+static KernelTcb_t *Scheduler_periority_algorithm(void);
 
 /*
 Initialize kernel stack & context
@@ -19,6 +23,7 @@ From top to bottom, each stack is composed of:
 void Kernel_task_init(void)
 {
     sAllocated_tcb_index = 0;
+    sCurrent_tcb = NULL;
 
     for (uint32_t i = 0; i < MAX_TASK_NUM; i++)
     {
@@ -35,9 +40,10 @@ void Kernel_task_init(void)
 Create a new task with given start function
 Returns task ID on success, -1 if task limit exceeded
 */
-uint32_t Kernel_task_create(KernelTaskFunc_t startFunc)
+uint32_t Kernel_task_create(KernelTaskFunc_t startFunc, uint32_t priority)
 {
     KernelTcb_t *new_tcb = &sTask_list[sAllocated_tcb_index++];
+    new_tcb->priority = priority;
 
     if (sAllocated_tcb_index > MAX_TASK_NUM)
     {
@@ -48,4 +54,35 @@ uint32_t Kernel_task_create(KernelTaskFunc_t startFunc)
     ctx->pc = (uint32_t)startFunc;
 
     return (sAllocated_tcb_index - 1);
+}
+
+KernelTcb_t *Scheduler_round_robin_algorithm(void)
+{
+    if (sAllocated_tcb_index == 0)
+    {
+        return NULL;
+    }
+
+    sCurrent_tcb_index++;
+    if (sCurrent_tcb_index >= sAllocated_tcb_index)
+    {
+        sCurrent_tcb_index = 0;
+    }
+
+    sCurrent_tcb = &sTask_list[sCurrent_tcb_index];
+    return sCurrent_tcb;
+}
+
+KernelTcb_t *Scheduler_periority_algorithm(void)
+{
+    for (uint32_t i = 0; i < sAllocated_tcb_index; i++)
+    {
+        KernelTcb_t *pNextTcb = &sTask_list[i];
+        if (pNextTcb != sCurrent_tcb && pNextTcb->priority < sCurrent_tcb->priority)
+        {
+            return pNextTcb;
+        }
+    }
+
+    return sCurrent_tcb;
 }
