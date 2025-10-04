@@ -53,19 +53,19 @@ void Kernel_init(void)
 
     Kernel_task_init();
 
-    taskId = Kernel_task_create(User_task0);
+    taskId = Kernel_task_create(User_task0, 0);
     if (taskId == -1)
     {
         putstr("Task0 create failed\n");
     }
 
-    taskId = Kernel_task_create(User_task1);
+    taskId = Kernel_task_create(User_task1, 0);
     if (taskId == -1)
     {
         putstr("Task1 create failed\n");
     }
 
-    taskId = Kernel_task_create(User_task2);
+    taskId = Kernel_task_create(User_task2, 0);
     if (taskId == -1)
     {
         putstr("Task2 create failed\n");
