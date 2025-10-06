@@ -24,7 +24,7 @@ void Kernel_task_init(void)
 
     for (uint32_t i = 0; i < MAX_TASK_NUM; i++)
     {
-        sTask_list[i].stack_base = (uint32_t)(TASK_STACK_START + i * TASK_STACK_SIZE);
+        sTask_list[i].stack_base = (uint8_t *)(TASK_STACK_START + i * USR_TASK_STACK_SIZE);
         sTask_list[i].sp = (uint32_t)sTask_list[i].stack_base + TASK_STACK_SIZE - 4;
         sTask_list[i].sp -= sizeof(KernelTaskContext_t);
         KernelTaskContext_t *ctx = (KernelTaskContext_t *)sTask_list[i].sp;
@@ -109,18 +109,4 @@ KernelTcb_t *Scheduler_round_robin_algorithm(void)
     sNext_tcb = &sTask_list[sCurrent_tcb_index];
 
     return sNext_tcb;
-}
-
-KernelTcb_t *Scheduler_periority_algorithm(void)
-{
-    for (uint32_t i = 0; i < sAllocated_tcb_index; i++)
-    {
-        KernelTcb_t *pNextTcb = &sTask_list[i];
-        if (pNextTcb != sCurrent_tcb && pNextTcb->priority < sCurrent_tcb->priority)
-        {
-            return pNextTcb;
-        }
-    }
-
-    return sCurrent_tcb;
 }
