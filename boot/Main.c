@@ -5,6 +5,7 @@
 #include "task.h"
 #include "stdlib.h"
 #include "stdio.h"
+#include "Kernel.h"
 
 static void Hw_init(void);
 static void Printf_test(void);
@@ -17,8 +18,7 @@ static void User_task2(void);
 int main()
 {
     Hw_init();
-
-    Timer_test();
+    Kernel_init();
 
     return 0;
 }
@@ -70,19 +70,39 @@ void Kernel_init(void)
     {
         putstr("Task2 create failed\n");
     }
+
+    Kernel_start();
 }
 
 void User_task0(void)
 {
-    putstr("User Task0\n");
+    uint32_t local = 0;
+    while (1)
+    {
+        debug_printf("User Task#0 SP=0x%x\n", &local);
+        delay(10000);
+        Kernel_yield();
+    }
 }
 
 void User_task1(void)
 {
-    putstr("User Task1\n");
+    uint32_t local = 0;
+    while (1)
+    {
+        debug_printf("User Task#1 SP=0x%x\n", &local);
+        delay(10000);
+        Kernel_yield();
+    }
 }
 
 void User_task2(void)
 {
-    putstr("User Task2\n");
+    uint32_t local = 0;
+    while (1)
+    {
+        debug_printf("User Task#2 SP=0x%x\n", &local);
+        delay(10000);
+        Kernel_yield();
+    }
 }
