@@ -29,8 +29,8 @@ Each task's stack size is fixed as USR_TASK_STACK_SIZE
 
 From top to bottom, each stack is composed of:
 - padding (4byte)
-- task context
 - stack data
+- task context
 - sp (top of stack)
 - empty memory
 - stack_base (0)
