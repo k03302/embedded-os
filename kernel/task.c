@@ -16,18 +16,6 @@ static void Restore_context(void);
 static KernelTcb_t *Scheduler_round_robin_algorithm(void);
 static KernelTcb_t *Scheduler_periority_algorithm(void);
 
-/*
-Initialize kernel stack & context
-Each task's stack size is fixed as USR_TASK_STACK_SIZE
-
-From top to bottom, each stack is composed of:
-- padding (4byte)
-- task context
-- stack data
-- sp (top of stack)
-- empty memory
-- stack_base (0)
-*/
 void Kernel_task_init(void)
 {
     sAllocated_tcb_index = 0;
