@@ -37,6 +37,8 @@ From top to bottom, each stack is composed of:
 */
 void Kernel_task_init(void);
 
+void Kernel_task_start(void);
+
 /*
 Create a new task with given start function
 Returns task ID on success, -1 if task limit exceeded
@@ -53,6 +55,6 @@ Perform context switch to next task
 5. Set pc to next execution position
 
 */
-void Kernel_task_schedule(void);
+void Kernel_task_scheduler(void);
 
 #endif
