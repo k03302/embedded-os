@@ -50,7 +50,7 @@ run: $(navilos)
 	qemu-system-arm -M realview-pb-a8 -kernel $(navilos) -nographic
 
 debug: $(navilos)
-	qemu-system-arm -M realview-pb-a8 -kernel $(navilos) -gdb tcp::1234,ipv4 \
+	qemu-system-arm -M realview-pb-a8 -kernel $(navilos) -nographic -S -gdb tcp::1234,ipv4 \
 		-serial stdio -monitor none
 
 
