@@ -3,7 +3,7 @@
 
 static uint32_t sEventFlag;
 
-void Kernel_event_flag_init(KernelEventFlag_t event)
+void Kernel_event_flag_init()
 {
     sEventFlag = 0;
 }

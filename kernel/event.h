@@ -48,7 +48,7 @@ typedef enum KernelEventFlag_t
     KernelEventFlag_Empty = 0x00000000,
 } KernelEventFlag_t;
 
-void Kernel_event_flag_init(KernelEventFlag_t event);
+void Kernel_event_flag_init();
 void Kernel_event_flag_set(KernelEventFlag_t event);
 void Kernel_event_flag_clear(KernelEventFlag_t event);
 bool Kernel_event_flag_check(KernelEventFlag_t event);
