@@ -52,6 +52,7 @@ void Kernel_init(void)
     uint32_t taskId;
 
     Kernel_task_init();
+    Kernel_event_flag_init();
 
     taskId = Kernel_task_create(User_task0, 0);
     if (taskId == -1)
@@ -65,22 +66,23 @@ void Kernel_init(void)
         putstr("Task1 create failed\n");
     }
 
-    taskId = Kernel_task_create(User_task2, 0);
-    if (taskId == -1)
-    {
-        putstr("Task2 create failed\n");
-    }
-
     Kernel_start();
 }
 
 void User_task0(void)
 {
     uint32_t local = 0;
+    debug_printf("User Task#0 SP=0x%x\n", &local);
     while (1)
     {
-        debug_printf("User Task#0 SP=0x%x\n", &local);
-        delay(10000);
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn);
+        switch (handle_event)
+        {
+        case KernelEventFlag_UartIn:
+            debug_printf("UartIn Event handled\n");
+            Kernel_send_events(KernelEventFlag_CmdIn);
+            break;
+        }
         Kernel_yield();
     }
 }
@@ -88,21 +90,16 @@ void User_task0(void)
 void User_task1(void)
 {
     uint32_t local = 0;
+    debug_printf("User Task#1 SP=0x%x\n", &local);
     while (1)
     {
-        debug_printf("User Task#1 SP=0x%x\n", &local);
-        delay(10000);
-        Kernel_yield();
-    }
-}
-
-void User_task2(void)
-{
-    uint32_t local = 0;
-    while (1)
-    {
-        debug_printf("User Task#2 SP=0x%x\n", &local);
-        delay(10000);
+        KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_CmdIn);
+        switch (handle_event)
+        {
+        case KernelEventFlag_CmdIn:
+            debug_printf("CmdIn Event handled\n");
+            break;
+        }
         Kernel_yield();
     }
 }
