@@ -63,5 +63,9 @@ static void interrupt_handler(void)
     uint8_t ch = Hal_uart_get_char();
 
     debug_printf("input char: %c\n", ch);
-    Kernel_send_events(KernelEventFlag_UartIn);
+    Kernel_send_events(KernelEventFlag_UartIn | KernelEventFlag_CmdIn);
+    if (ch == 'X')
+    {
+        Kernel_send_events(KernelEventFlag_CmdOut);
+    }
 }
