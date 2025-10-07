@@ -99,6 +99,8 @@ uint32_t vsprintf(char *buf, const char *format, va_list arg)
             format_ptr++;
         }
     }
+
+    *buf_ptr = '\0';
 }
 
 uint32_t debug_printf(const char *format, ...)
