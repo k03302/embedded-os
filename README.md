@@ -18,8 +18,8 @@ A simple RTOS built from scratch by following the book "Embedded OS Development 
 | 9 | Scheduler | ✅ Complete | [ch9](https://github.com/k03302/embedded-os/tree/ch9) | Round-robin, priority scheduling |
 | 10 | Context switching | ✅ Complete | [ch10](https://github.com/k03302/embedded-os/tree/ch10) | Register saving, task switching |
 | 11 | Event | ✅ Complete | [ch11](https://github.com/k03302/embedded-os/tree/ch11) | Event flags, synchronization primitives |
-| 12 | Messaging | 🚧 In Progress | - | Message queues, IPC mechanisms |
-| 13 | Synchronizing | 📋 Planned | - | Mutex, semaphore, critical sections |
+| 12 | Messaging | ✅ Complete | [ch12](https://github.com/k03302/embedded-os/tree/ch12) | Message queues, IPC mechanisms |
+| 13 | Synchronizing | 🚧 In Progress | - | Mutex, semaphore, critical sections |
 
 
 # Build Instructions
