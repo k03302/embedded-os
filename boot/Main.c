@@ -54,6 +54,8 @@ void Kernel_init(void)
 
     Kernel_task_init();
     Kernel_event_flag_init();
+    Kernel_msgQ_init();
+    Kernel_sem_init(1);
 
     taskId = Kernel_task_create(User_task0, 0);
     if (taskId == -1)
