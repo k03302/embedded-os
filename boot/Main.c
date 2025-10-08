@@ -14,6 +14,7 @@ static void Kernel_init(void);
 static void User_task0(void);
 static void User_task1(void);
 static void User_task2(void);
+static bool User_event_handle0(uint8_t cmdBuf[16], uint32_t *cmdBufIdx);
 
 int main()
 {
@@ -69,42 +70,74 @@ void Kernel_init(void)
     Kernel_start();
 }
 
+bool User_event_handle0(uint8_t cmdBuf[16], uint32_t *cmdBufIdx)
+{
+    uint8_t uartch = 0;
+
+    bool pendingEvent = true;
+    KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn | KernelEventFlag_CmdOut);
+
+    switch (handle_event)
+    {
+    case KernelEventFlag_UartIn:
+        Kernel_recv_msg(KernelMsgQ_Task0, &uartch, 1);
+        // if carriage return or out of length, send accumulated chars to task1
+        if (uartch == '\r' || *cmdBufIdx >= 15)
+        {
+            cmdBuf[*cmdBufIdx] = '\0';
+            Kernel_send_msg(KernelMsgQ_Task1, cmdBufIdx, 1);       // send length of message
+            Kernel_send_msg(KernelMsgQ_Task1, cmdBuf, *cmdBufIdx); // send message
+            Kernel_send_events(KernelEventFlag_CmdIn);
+            *cmdBufIdx = 0;
+        }
+        // accumulate recieved char to buffer
+        else
+        {
+            cmdBuf[*cmdBufIdx] = uartch;
+            *cmdBufIdx = *cmdBufIdx + 1;
+        }
+
+        debug_printf("UartIn Event handled by task0\n");
+        break;
+    case KernelEventFlag_CmdOut:
+        debug_printf("CmdOut Event handled by task0\n");
+    default:
+        pendingEvent = false;
+    }
+
+    return pendingEvent;
+}
+
 void User_task0(void)
 {
     uint32_t local = 0;
+    uint8_t cmdBuf[16];
+    uint32_t cmdBufIdx = 0;
+
     debug_printf("User Task#0 SP=0x%x\n", &local);
-    while (1)
+    while (true)
     {
-        bool pendingEvent = true;
-        while (pendingEvent)
-        {
-            KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_UartIn | KernelEventFlag_CmdOut);
-            switch (handle_event)
-            {
-            case KernelEventFlag_UartIn:
-                debug_printf("UartIn Event handled by task0\n");
-                break;
-            case KernelEventFlag_CmdOut:
-                debug_printf("CmdOut Event handled by task0\n");
-            default:
-                pendingEvent = false;
-            }
-        }
+        while (User_event_handle0(cmdBuf, &cmdBufIdx))
+            ;
         Kernel_yield();
     }
 }
 
 void User_task1(void)
 {
+    uint8_t cmdlen = 0;
+    uint8_t cmd[16] = {0};
     uint32_t local = 0;
     debug_printf("User Task#1 SP=0x%x\n", &local);
-    while (1)
+    while (true)
     {
         KernelEventFlag_t handle_event = Kernel_wait_events(KernelEventFlag_CmdIn);
         switch (handle_event)
         {
         case KernelEventFlag_CmdIn:
-            debug_printf("CmdIn Event handled by task1\n");
+            Kernel_recv_msg(KernelMsgQ_Task1, &cmdlen, 1);
+            Kernel_recv_msg(KernelMsgQ_Task1, cmd, cmdlen);
+            debug_printf("CmdIn Event handled by task1, recieved : %s\n", cmd);
             break;
         }
         Kernel_yield();
