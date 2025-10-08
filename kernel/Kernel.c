@@ -40,3 +40,43 @@ KernelEventFlag_t Kernel_wait_events(uint32_t event_list)
 
     return KernelEventFlag_Empty;
 }
+
+bool Kernel_send_msg(KernelMsgQ_t Qname, void *data, uint32_t count)
+{
+    uint8_t *data_ptr = (uint8_t *)data;
+    uint32_t size_left = Kernel_msgQ_get_size_left(Qname);
+    if (size_left < count)
+    {
+        return false;
+    }
+    for (uint32_t i = 0; i < count; i++)
+    {
+        if (Kernel_msgQ_enqueue(Qname, *data_ptr) == false)
+        {
+            for (uint32_t j = 0; j < i; j++)
+            {
+                uint8_t rollback;
+                Kernel_msgQ_dequeue(Qname, &rollback);
+            }
+            return false;
+        }
+        data_ptr++;
+    }
+    return true;
+}
+
+uint32_t Kernel_recv_msg(KernelMsgQ_t Qname, void *out_data, uint32_t count)
+{
+    uint8_t *out_data_ptr = (uint8_t *)out_data;
+
+    for (uint32_t i = 0; i < count; i++)
+    {
+        if (Kernel_msgQ_dequeue(Qname, out_data_ptr) == false)
+        {
+            return i;
+        }
+        out_data_ptr++;
+    }
+
+    return count;
+}
