@@ -16,4 +16,6 @@ uint32_t Kernel_recv_msg(KernelMsgQ_t Qname, void *out_data, uint32_t count);
 void Kernel_lock_sem(void);
 void Kernel_unlock_sem(void);
 
+void Kernel_lock_mutex(void);
+void Kernel_unlock_mutex(void);
 #endif

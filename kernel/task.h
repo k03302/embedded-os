@@ -57,4 +57,6 @@ Perform context switch to next task
 */
 void Kernel_task_scheduler(void);
 
+uint32_t Kernel_task_get_current_task_id(void);
+
 #endif

@@ -16,6 +16,11 @@ static void Restore_context(void);
 static KernelTcb_t *Scheduler_round_robin_algorithm(void);
 static KernelTcb_t *Scheduler_periority_algorithm(void);
 
+uint32_t Kernel_task_get_current_task_id(void)
+{
+    return sCurrent_tcb_index;
+}
+
 void Kernel_task_init(void)
 {
     sAllocated_tcb_index = 0;
