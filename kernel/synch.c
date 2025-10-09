@@ -27,3 +27,32 @@ void Kernel_sem_release(void)
         sSem = sSemMax;
     }
 }
+
+static KernelMutex_t sMutex;
+
+void Kernel_mutex_init(void)
+{
+    sMutex.owner = 0;
+    sMutex.lock = false;
+}
+
+bool Kernel_mutex_lock(uint32_t owner)
+{
+    if (sMutex.lock)
+    {
+        return false;
+    }
+    sMutex.owner = owner;
+    sMutex.lock = true;
+    return true;
+}
+
+bool Kernel_mutex_unlock(uint32_t owner)
+{
+    if (sMutex.owner == owner)
+    {
+        sMutex.lock = false;
+        return true;
+    }
+    return false;
+}
